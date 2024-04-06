@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmosKino</title>
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #fff;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #31363F;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-family: "Verdana";
+            padding: 0 50px;
+        }
+        .nav-links {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            padding: 0 60px;
+        }
+        .nav-links li {
+            margin-left: 30px;
+        }
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-family: "Arial", sans-serif;
+        }
+        .nav-link:hover {
+            color: #f2f2f2;
+        }
+        .movie-title {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .movie-title h2 {
+            margin-top: 0;
+            margin-bottom: 0;
+            color: #31363F;
+            font-family: Arial, sans-serif;
+        }
+        .movie-info h3 {
+            margin-top: 0px;
+            margin-bottom: 20px;
+            color: #61677A;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            border-bottom: 1px solid #61677A;
+            padding-bottom: 10px;
+        }
+        .movie-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .movie-poster img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            flex-basis: auto; /* Изменено на auto */
+        }
+        .sidebar img {
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .main-content {
+            flex-basis: 15%;
+        }
+        .movie-info {
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .movie-info h2 {
+            margin-top: 0;
+            color: #31363F;
+            font-family: Arial, sans-serif;
+        }
+        .movie-info p {
+            color: #31363F;
+            font-family: Arial, sans-serif;
+        }
+        .trailer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1px;
+        }
+        .trailer h2 {
+            margin-top: 0;
+            color: #000;
+            font-family: Arial, sans-serif;
+        }
+        .trailer iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+        .footer {
+            background-color: #31363F;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            border-radius: 10px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .nav-links li:hover .nav-link {
+            color: #bfbfbf;
+        }
+        .sidebar img {
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease;
+        }
+        .sidebar img:hover {
+            opacity: 0.5;
+        }
+        .trailer iframe:not(:fullscreen) {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+            transition: opacity 0.5s ease;
+        }
+        .trailer iframe:not(:fullscreen):hover {
+            opacity: 0.8;
+        }
+
+        /* Медиа-запрос для мобильных устройств */
+        @media only screen and (max-width: 1080px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 15px;
+            }
+            .nav-links {
+                padding: 0 20px;
+            }
+            .nav-links li {
+                margin-left: 10px;
+            }
+            .nav-link {
+                font-size: 14px;
+            }
+            .movie-title h2 {
+                font-size: 15px;
+            }
+            .movie-info h3 {
+                font-size: 14px;
+            }
+            .movie-info p {
+                font-size: 12px;
+            }
+            .trailer iframe {
+                height: 100px;
+            }
+            .footer {
+                font-size: 10px;
+            }
+            /* Изменения для постера и видео */
+            .sidebar img {
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+            .trailer iframe {
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+            .movie-info {
+                padding: 20px;
+            }
+            .movie-info h3 {
+                font-size: 20px;
+            }
+            .movie-info p {
+                font-size: 16px;
+                line-height: 1.5;
+            }
+            .movie-info h2 {
+                font-size: 20px;
+            }
+            .movie-info iframe {
+                font-size: 16px;
+                line-height: 44.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AMOSKINO</h1>
+            <ul class="nav-links">
+                <li><a href="main.html" class="nav-link">Главная</a></li>
+                <li><a href="none" class="nav-link">Сейчас выходит</a></li>
+                <li><a href="none" class="nav-link">Избранное</a></li>
+            </ul>
+        </div>
+
+        <div class="movie-details">
+            <div class="main-content">
+                <div class="movie-info">
+                    <div class="sidebar">
+                        <a href="index.html">
+                            <img src="https://images.kinorium.com/movie/poster/9655445/w1500_52160756.jpg" alt="Постер фильма">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 AmosKino</p>
+    </div>
+</body>
+</html>
