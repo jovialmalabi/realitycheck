@@ -1,196 +1,435 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reality check</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solo Leveling System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        :root {
+            --bg-dark: #191919;
+            --text-light: #ffffff;
+            --accent-blue: #434DFF;
+            --deep-blue: #171B60;
+            --neon-effect: 0 0 15px #434DFF;
+        }
+
+        * {
             margin: 0;
-            font-family: "Jost", serif;
-            background-color: #191919;
-            color: #ffffff;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Jost', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding-bottom: 80px;
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        .content {
-            flex: 1;
-            padding: 25px;
-            overflow-y: auto;
-            background: linear-gradient(to bottom, #171B60, #191919);
-        }
-
-        .panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
+            padding: 20px;
+            position: absolute;
             width: 100%;
-            display: flex;
-            background: linear-gradient(to bottom, #191919, #171B60);
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid #191919;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .panel button {
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-family: "Jost", serif;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 5px;
+        .container.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
         }
 
-        .panel button.active {
-            text-decoration: underline;
-            font-weight: bold;
+        @keyframes sectionSlide {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .stats {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .stat-block {
+            background: linear-gradient(145deg, rgba(23, 27, 96, 0.9), rgba(67, 77, 255, 0.3));
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--accent-blue);
+            box-shadow: var(--neon-effect);
         }
 
-        .stats div {
+        .stat-item {
+            margin: 15px 0;
+        }
+
+        .stat-label {
             display: flex;
             justify-content: space-between;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
-        .tasks {
+        .progress-bar {
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), #6C76FF);
+            width: var(--progress);
+            transition: width 0.5s ease;
+            border-radius: 6px;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(23, 27, 96, 0.95);
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            justify-content: space-around;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            border-top: 1px solid var(--accent-blue);
         }
 
-        .task {
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.1);
+        .nav-btn {
+            color: var(--text-light);
+            padding: 15px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
         }
 
-        .task .reward {
-            color: #434DFF;
-            font-weight: bold;
+        .nav-btn.active {
+            background: rgba(67, 77, 255, 0.2);
         }
 
-        .task button {
-            font-family: "Jost", serif;
-            margin-top: 10px;
-            padding: 8px 15px;
-            background-color: #434DFF;
-            color: #ffffff;
+        .quest-card {
+            background: linear-gradient(145deg, rgba(67, 77, 255, 0.15), rgba(23, 27, 96, 0.3));
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-blue);
+        }
+
+        .quest-button {
+            background: linear-gradient(45deg, var(--accent-blue), #6C76FF);
+            color: white;
             border: none;
+            padding: 12px 30px;
             border-radius: 10px;
             cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: 0.3s;
+            font-weight: 600;
         }
 
-        .task button:hover {
-            background-color: #171B60;
+        .quest-button.completed {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            cursor: not-allowed;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(23, 27, 96, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            animation: fadeIn 0.3s, fadeOut 0.3s 5.7s;
+        }
+
+        .notification-gif {
+            width: 70px;
+            height: 70px;
+            border-radius: 7px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="profile" class="content">
-            <h2>Мои характеристики</h2>
-            <div class="stats">
-                <div><span>Здоровье</span><span id="health">100</span></div>
-                <div><span>Сила</span><span id="strength">10</span></div>
-                <div><span>Ловкость</span><span id="agility">2</span></div>
-                <div><span>Интеллект</span><span id="intelligence">10</span></div>
-                <div><span>Выносливость</span><span id="endurance">4</span></div>
-            </div>
-        </div>
-
-        <div id="tasks" class="content" style="display: none;">
-            <h2>Задания на сегодня</h2>
-            <div class="tasks">
-                <div class="task" data-stat="endurance" data-increment="1" data-condition="5">
-                    <p>Пробежать <span class="condition">5</span> км</p>
-                    <p class="reward">+<span class="increment">1</span> Выносливость</p>
-                    <button class="complete">Выполнено</button>
+    <div class="container" id="profile-section">
+        <div class="stat-block">
+            <h2>Мой Профиль</h2>
+            <div class="stat-item">
+                <div class="stat-label">
+                    <span>Здоровье</span>
+                    <span id="health-value">100</span>
                 </div>
-                <div class="task" data-stat="strength" data-increment="1" data-condition="5">
-                    <p>Поднять <span class="condition">2</span> кг 5 раз</p>
-                    <p class="reward">+<span class="increment">1</span> Сила</p>
-                    <button class="complete">Выполнено</button>
-                </div>
-                <div class="task" data-stat="intelligence" data-increment="1" data-condition="5">
-                    <p>Решить <span class="condition">5</span> сложных задач</p>
-                    <p class="reward">+<span class="increment">1</span> Интеллект</p>
-                    <button class="complete">Выполнено</button>
-                </div>
-                <div class="task" data-stat="agility" data-increment="1" data-condition="30">
-                    <p>Сделать <span class="condition">20</span> прыжков</p>
-                    <p class="reward">+<span class="increment">1</span> Ловкость</p>
-                    <button class="complete">Выполнено</button>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="--progress: 100%"></div>
                 </div>
             </div>
-        </div>
-
-        <div class="panel">
-            <button id="btnProfile" class="active">Профиль</button>
-            <button id="btnTasks">Задания</button>
+            <div class="stat-item">
+                <div class="stat-label">
+                    <span>Сила</span>
+                    <span id="strength-value">10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="--progress: 50%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">
+                    <span>Ловкость</span>
+                    <span id="agility-value">10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="--progress: 50%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">
+                    <span>Интеллект</span>
+                    <span id="intelligence-value">10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="--progress: 50%"></div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">
+                    <span>Выносливость</span>
+                    <span id="stamina-value">10</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="--progress: 50%"></div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="container hidden" id="quests-section">
+        <div id="quests-container"></div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-btn active" onclick="showSection('profile')">Профиль</div>
+        <div class="nav-btn" onclick="showSection('quests')">Задания</div>
+    </div>
+
     <script>
-        const profileTab = document.getElementById('profile');
-        const tasksTab = document.getElementById('tasks');
-        const btnProfile = document.getElementById('btnProfile');
-        const btnTasks = document.getElementById('btnTasks');
+        class GameSystem {
+            constructor() {
+                this.stats = {
+                    health: 100,
+                    strength: 5,
+                    agility: 2,
+                    intelligence: 5,
+                    stamina: 1
+                };
+                
+                this.quests = [];
+                this.init();
+            }
 
-        btnProfile.addEventListener('click', () => {
-            profileTab.style.display = 'block';
-            tasksTab.style.display = 'none';
-            btnProfile.classList.add('active');
-            btnTasks.classList.remove('active');
-        });
+            init() {
+                this.loadProgress();
+                this.generateQuests();
+                this.updateUI();
+            }
 
-        btnTasks.addEventListener('click', () => {
-            tasksTab.style.display = 'block';
-            profileTab.style.display = 'none';
-            btnTasks.classList.add('active');
-            btnProfile.classList.remove('active');
-        });
+            loadProgress() {
+                const savedData = localStorage.getItem('gameData');
+                if(savedData) {
+                    const data = JSON.parse(savedData);
+                    this.stats = data.stats;
+                    this.quests = data.quests;
+                }
+            }
 
-        document.querySelectorAll('.complete').forEach(button => {
-            button.addEventListener('click', event => {
-                const task = event.target.closest('.task');
-                const stat = task.getAttribute('data-stat');
-                const increment = parseInt(task.getAttribute('data-increment'));
-                const condition = parseInt(task.getAttribute('data-condition'));
+            saveProgress() {
+                localStorage.setItem('gameData', JSON.stringify({
+                    stats: this.stats,
+                    quests: this.quests
+                }));
+            }
 
-                // Update stat
-                const statElement = document.getElementById(stat);
-                const currentStat = parseInt(statElement.textContent);
-                statElement.textContent = currentStat + increment;
+            generateQuests() {
+                if(this.quests.length === 0) {
+                    this.quests = [
+                        {
+                            type: 'stamina',
+                            requirement: 5,
+                            description: 'Пробежать',
+                            unit: ' км',
+                            completed: false,
+                            daily: true
+                        },
+                        {
+                            type: 'strength',
+                            requirement: 50,
+                            description: 'Отжиманий',
+                            unit: ' раз',
+                            completed: false,
+                            daily: true
+                        },
+                        {
+                            type: 'agility',
+                            requirement: 100,
+                            description: 'Прыжков на скакалке',
+                            unit: ' раз',
+                            completed: false,
+                            daily: true
+                        },
+                        {
+                            type: 'intelligence',
+                            requirement: 1,
+                            description: 'Прочитать книгу',
+                            unit: ' шт',
+                            completed: false,
+                            daily: true
+                        }
+                    ];
+                }
+            }
 
-                // Update task
-                const newCondition = condition + Math.floor(condition * 0.2);
-                const newIncrement = increment + 3;
+            completeQuest(index) {
+                const quest = this.quests[index];
+                if(!quest.completed && confirm('Подтвердить выполнение задания?')) {
+                    quest.completed = true;
+                    this.stats[quest.type]++;
+                    this.showLevelUpNotification(quest.type);
+                    this.updateUI();
+                    this.saveProgress();
+                }
+            }
 
-                task.setAttribute('data-condition', newCondition);
-                task.setAttribute('data-increment', newIncrement);
-                task.querySelector('.condition').textContent = newCondition;
-                task.querySelector('.increment').textContent = newIncrement;
+            showLevelUpNotification(statType) {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `
+                    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3ZzY211am0zNWpvZXNxdzdnamF2dGJnMnE3bm1tNWhhd2N1aGl4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JqIrxIRLrxx0NHxMDI/giphy.gif" class="notification-gif">
+                    <div>
+                        <h3>Уровень повышен!</h3>
+                        <p>Текущий уровень характеристики: ${this.stats[statType]}</p>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 4000);
+            }
+
+            updateUI() {
+                document.getElementById('health-value').textContent = this.stats.health;
+                document.getElementById('strength-value').textContent = this.stats.strength;
+                document.getElementById('agility-value').textContent = this.stats.agility;
+                document.getElementById('intelligence-value').textContent = this.stats.intelligence;
+                document.getElementById('stamina-value').textContent = this.stats.stamina;
+
+                this.updateProgressBars();
+                this.renderQuests();
+            }
+
+            updateProgressBars() {
+                const maxValues = {
+                    health: 100,
+                    strength: 2000,
+                    agility: 1000,
+                    intelligence: 3000,
+                    stamina: 1500
+                };
+
+                Object.keys(this.stats).forEach(stat => {
+                    const progress = (this.stats[stat] / maxValues[stat]) * 100;
+                    document.querySelectorAll(`#${stat}-value`).forEach(el => {
+                        el.closest('.stat-item').querySelector('.progress-fill').style.width = `${progress}%`;
+                    });
+                });
+            }
+
+            renderQuests() {
+                const container = document.getElementById('quests-container');
+                container.innerHTML = this.quests.map((quest, index) => `
+                    <div class="quest-card">
+                        <h3>${quest.description} ${quest.requirement}${quest.unit}</h3>
+                        <p>Увеличивает ${this.getStatName(quest.type)}</p>
+                        <button class="quest-button ${quest.completed ? 'completed' : ''}" 
+                                onclick="gameSystem.completeQuest(${index})"
+                                ${quest.completed ? 'disabled' : ''}>
+                            ${quest.completed ? 'Выполнено' : 'Выполнить'}
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            getStatName(type) {
+                const names = {
+                    stamina: 'Выносливость',
+                    strength: 'Сила',
+                    agility: 'Ловкость',
+                    intelligence: 'Интеллект'
+                };
+                return names[type];
+            }
+        }
+
+        const gameSystem = new GameSystem();
+
+        function showSection(section) {
+            document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            if(section === 'profile') {
+                document.getElementById('profile-section').classList.remove('hidden');
+                document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+            } else {
+                document.getElementById('quests-section').classList.remove('hidden');
+                document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
+            }
+        }
+
+         // Обновленная функция переключения разделов
+         function showSection(section) {
+            const sections = document.querySelectorAll('.container');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            sections.forEach(el => {
+                if(el.id === `${section}-section`) {
+                    el.classList.remove('hidden');
+                    el.style.animation = 'sectionSlide 0.4s ease';
+                } else {
+                    el.classList.add('hidden');
+                }
             });
-        });
+            
+            buttons.forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === section);
+            });
+        }
     </script>
 </body>
 </html>
